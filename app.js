@@ -8,7 +8,9 @@ const config = {
   channelSecret: '3802ab5e60a04f27174f68eb94f08a89'
 };
 
-const client = new line.Client(config);
+const client = new line.messagingApi.MessagingApiClient({
+  channelAccessToken: config.channelAccessToken
+});
 
 app.post('/webhook', express.json(), async (req, res) => {
 
