@@ -6,15 +6,18 @@ const axios = require('axios');
 
 const app = express();
 
-/* ================= LINE ================= */
+/* LINE CONFIG */
 const config = {
   channelAccessToken: process.env.LINE_TOKEN,
   channelSecret: process.env.LINE_SECRET
 };
 
-const client = new line.Client(config);
+/* ✅ 正確 SDK 初始化 */
+const client = new line.messagingApi.MessagingApiClient({
+  channelAccessToken: config.channelAccessToken
+});
 
-/* ================= webhook ================= */
+/* WEBHOOK */
 app.post('/webhook', express.json(), async (req, res) => {
 
   const events = req.body.events || [];
@@ -27,23 +30,17 @@ app.post('/webhook', express.json(), async (req, res) => {
     const msg = event.message.text.trim();
     let reply = '';
 
-    /* ================= 指令系統 ================= */
-    
-    // 🕒 時間
+    /* 時間 */
     if (msg === '時間') {
       reply = `現在時間：${new Date().toLocaleString('zh-TW')}`;
     }
 
-    // 📍 幫助
+    /* 幫助 */
     else if (msg === '幫助') {
-      reply =
-`指令列表：
-時間 👉 顯示時間
-天氣 台北 👉 查天氣
-AI 你好 👉 ChatGPT 回答`;
+      reply = `時間 / 天氣 城市 / AI 問題`;
     }
 
-    /* ================= 天氣 ================= */
+    /* 天氣 */
     else if (msg.startsWith('天氣')) {
       try {
         const city = msg.replace('天氣', '').trim() || 'Hualien';
@@ -52,16 +49,15 @@ AI 你好 👉 ChatGPT 回答`;
 
         const resWeather = await axios.get(url);
 
-        reply =
-`${city}
-🌡️ 溫度：${resWeather.data.main.temp}°C
-🌤️ 天氣：${resWeather.data.weather[0].description}`;
+        reply = `${city}
+🌡️ ${resWeather.data.main.temp}°C
+🌤️ ${resWeather.data.weather[0].description}`;
       } catch (err) {
-        reply = '❌ 查不到這個城市天氣';
+        reply = '查不到天氣 ❌';
       }
     }
 
-    /* ================= AI ChatGPT ================= */
+    /* AI */
     else if (msg.startsWith('AI')) {
       try {
         const question = msg.replace('AI', '').trim();
@@ -71,7 +67,7 @@ AI 你好 👉 ChatGPT 回答`;
           {
             model: 'gpt-4o-mini',
             messages: [
-              { role: 'system', content: '你是LINE機器人，回答要簡短' },
+              { role: 'system', content: '你是LINE助手' },
               { role: 'user', content: question }
             ]
           },
@@ -83,40 +79,32 @@ AI 你好 👉 ChatGPT 回答`;
         );
 
         reply = ai.data.choices[0].message.content;
-
       } catch (err) {
-        reply = '❌ AI 目前無法使用';
+        reply = 'AI錯誤 ❌';
       }
     }
 
-    /* ================= 關鍵字系統 ================= */
-    else if (msg.includes('你好')) {
-      reply = '你好 👋 我是你的LINE機器人';
-    }
-    else if (msg.includes('誰')) {
-      reply = '我是AI機器人 🤖';
-    }
-
-    /* ================= 預設 ================= */
+    /* 預設 */
     else {
-      reply = `我不懂「${msg}」，輸入「幫助」查看指令`;
+      reply = `你說：${msg}`;
     }
 
     await client.replyMessage({
       replyToken: event.replyToken,
       messages: [{ type: 'text', text: reply }]
     });
+
   }));
 
   res.sendStatus(200);
 });
 
-/* ================= 測試頁 ================= */
+/* HOME */
 app.get('/', (req, res) => {
   res.send('LINE Bot Running 🚀');
 });
 
-/* ================= 啟動 ================= */
+/* START */
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log('Bot running 🚀');
