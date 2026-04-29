@@ -4,7 +4,7 @@ const line = require('@line/bot-sdk');
 const app = express();
 
 const config = {
-  channelAccessToken: 'nULLzPONY/G+cg3qes3CBxsCexq6atnrCAX8I9YcgMR6snDRDGpw8cCx4um3jhysgTrtOEwTKlo0CUsoqnZyBA q+BdHTe++eGfpU8qqeC+n9Rdil+EMU8Wbta1lAezzlCUYxzBpu3EzZmE1bIvsctQdB04t89/1O/w1cDnyilFU=',
+  channelAccessToken: '1GMvONrIQ4TwrHyRYUwWnl3En6ZciWbDYlrfwB7NlO4M5oGw6Ky+txjJ68PyGI7mgTrtOEwTKlo0CUsoqnZyBA q+BdHTe++eGfpU8qqeC+kX7QwjuvfQe25MtMc2+IP6mY6ROVYCE9koICCQPVaoywdB04t89/1O/w1cDnyilFU=',
   channelSecret: '3802ab5e60a04f27174f68eb94f08a89'
 };
 
