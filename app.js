@@ -23,11 +23,15 @@ app.post('/webhook', express.json(), async (req, res) => {
     if (event.type !== 'message') continue;
     if (event.message.type !== 'text') continue;
 
-    await client.replyMessage(event.replyToken, {
+  await client.replyMessage({
+  replyToken: event.replyToken,
+  messages: [
+    {
       type: 'text',
       text: '你好，我是機器人 🤖'
-    });
-  }
+    }
+  ]
+});
 
   res.sendStatus(200);
 });
