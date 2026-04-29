@@ -1,18 +1,15 @@
 {
   "name": "line-bot",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "type": "commonjs",
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
     "@line/bot-sdk": "^11.0.0",
-    "axios": "^1.15.2",
+    "axios": "^1.6.8",
+    "dotenv": "^16.4.5",
     "express": "^5.2.1"
   }
 }
