@@ -4,15 +4,12 @@ const line = require('@line/bot-sdk');
 const app = express();
 
 const config = {
-  channelAccessToken: '你的TOKEN',
-  channelSecret: '你的SECRET'
+  channelAccessToken: 'nUlLzPOny/G+cg3qes3CBxsCexq6atnrCAX8I9YcgMR6snDRDGpw8cCx4um3jhysgTrtOEwTKlo0CUsoqnZyBAq+BdHTe++eGfpU8qqeC+n9Rdil+EMU8Wbta1lAezzlCUYxzBpu3EzZmE1bIvsctQdB04t89/1O/w1cDnyilFU=',
+  channelSecret: '3802ab5e60a04f27174f68eb94f08a89'
 };
 
-const client = new line.messagingApi.MessagingApiClient({
-  channelAccessToken: config.channelAccessToken
-});
+const client = new line.Client(config);
 
-// 🔥 LINE middleware（關鍵）
 app.post('/webhook', express.json(), async (req, res) => {
 
   console.log('🔥 webhook 有進來');
@@ -24,14 +21,9 @@ app.post('/webhook', express.json(), async (req, res) => {
     if (!event || event.type !== 'message') return;
     if (!event.message || event.message.type !== 'text') return;
 
-    await client.replyMessage({
-      replyToken: event.replyToken,
-      messages: [
-        {
-          type: 'text',
-          text: '你好，我是機器人 🤖'
-        }
-      ]
+    await client.replyMessage(event.replyToken, {
+      type: 'text',
+      text: '你好，我是機器人 🤖'
     });
   }));
 
