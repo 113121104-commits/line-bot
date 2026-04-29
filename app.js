@@ -9,13 +9,16 @@ const time = require('./services/time');
 
 const app = express();
 
-/* LINE Client（正確新版） */
-const client = new line.messagingApi.MessagingApiClient({
-  channelAccessToken: process.env.LINE_TOKEN
+/* LINE client（穩定版） */
+const client = new line.Client({
+  channelAccessToken: process.env.LINE_TOKEN,
+  channelSecret: process.env.LINE_SECRET
 });
 
-/* Webhook */
+/* webhook */
 app.post('/webhook', express.json(), async (req, res) => {
+
+  console.log('🔥 webhook 有進來');
 
   const events = req.body.events || [];
 
@@ -49,10 +52,14 @@ app.post('/webhook', express.json(), async (req, res) => {
       reply = `我不懂：${msg}`;
     }
 
-    await client.replyMessage({
-      replyToken: event.replyToken,
-      messages: [{ type: 'text', text: reply }]
-    });
+    try {
+      await client.replyMessage({
+        replyToken: event.replyToken,
+        messages: [{ type: 'text', text: reply }]
+      });
+    } catch (err) {
+      console.error('❌ reply error:', err);
+    }
 
   }));
 
@@ -63,6 +70,7 @@ app.get('/', (req, res) => {
   res.send('Bot running 🚀');
 });
 
-app.listen(process.env.PORT || 3000, () => {
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
   console.log('Bot started 🚀');
 });
