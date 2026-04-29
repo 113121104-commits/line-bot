@@ -9,13 +9,10 @@ const time = require('./services/time');
 
 const app = express();
 
-/* LINE 設定 */
-const config = {
-  channelAccessToken: process.env.LINE_TOKEN,
-  channelSecret: process.env.LINE_SECRET
-};
-
-const client = new line.Client(config);
+/* LINE Client */
+const client = new line.messagingApi.MessagingApiClient({
+  channelAccessToken: process.env.LINE_TOKEN
+});
 
 /* Webhook */
 app.post('/webhook', express.json(), async (req, res) => {

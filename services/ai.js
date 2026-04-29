@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-async function askAI(question) {
+exports.askAI = async (question) => {
   try {
     const res = await axios.post(
       'https://api.openai.com/v1/chat/completions',
@@ -20,9 +20,7 @@ async function askAI(question) {
 
     return res.data.choices[0].message.content;
 
-  } catch (err) {
-    return '❌ AI 目前無法使用';
+  } catch {
+    return 'AI錯誤 ❌';
   }
-}
-
-module.exports = { askAI };
+};
