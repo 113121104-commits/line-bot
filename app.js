@@ -4,7 +4,7 @@ const line = require('@line/bot-sdk');
 const app = express();
 
 const config = {
-  channelAccessToken: 'nUlLzPOny/G+cg3qes3CBxsCexq6atnrCAX8I9YcgMR6snDRDGpw8cCx4um3jhysgTrtOEwTKlo0CUsoqnZyBAq+BdHTe++eGfpU8qqeC+n9Rdil+EMU8Wbta1lAezzlCUYxzBpu3EzZmE1bIvsctQdB04t89/1O/w1cDnyilFU=',
+  channelAccessToken: 'nULLzPONY/G+cg3qes3CBxsCexq6atnrCAX8I9YcgMR6snDRDGpw8cCx4um3jhysgTrtOEwTKlo0CUsoqnZyBA q+BdHTe++eGfpU8qqeC+n9Rdil+EMU8Wbta1lAezzlCUYxzBpu3EzZmE1bIvsctQdB04t89/1O/w1cDnyilFU=',
   channelSecret: '3802ab5e60a04f27174f68eb94f08a89'
 };
 
@@ -16,16 +16,16 @@ app.post('/webhook', express.json(), async (req, res) => {
 
   const events = req.body.events || [];
 
-  await Promise.all(events.map(async (event) => {
+  for (const event of events) {
 
-    if (!event || event.type !== 'message') return;
-    if (!event.message || event.message.type !== 'text') return;
+    if (event.type !== 'message') continue;
+    if (event.message.type !== 'text') continue;
 
     await client.replyMessage(event.replyToken, {
       type: 'text',
       text: '你好，我是機器人 🤖'
     });
-  }));
+  }
 
   res.sendStatus(200);
 });
