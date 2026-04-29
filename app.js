@@ -33,5 +33,15 @@ app.post('/webhook', express.json(), async (req, res) => {
     });
   }
 
-  res.sendStatus(200); // ✅ 放在外面
+  res.sendStatus(200);
+});
+
+// ✅ 少這段會直接壞掉
+app.get('/', (req, res) => {
+  res.send('Bot is running');
+});
+
+// ✅ 沒這個根本不會啟動
+app.listen(process.env.PORT || 3000, () => {
+  console.log('機器人啟動');
 });
