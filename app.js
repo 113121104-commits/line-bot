@@ -4,8 +4,7 @@ const line = require('@line/bot-sdk');
 const app = express();
 
 const config = {
-  channelAccessToken: '1GMvONrIQ4TwrHyRYUwWnl3En6ZciWbDYlrfwB7NlO4M5oGw6Ky+txjJ68PyGI7mgTrtOEwTKlo0CUsoqnZyBA q+BdHTe++eGfpU8qqeC+kX7QwjuvfQe25MtMc2+IP6mY6ROVYCE9koICCQPVaoywdB04t89/1O/w1cDnyilFU=',
-  channelSecret: '3802ab5e60a04f27174f68eb94f08a89'
+  channelAccessToken: '1GMvONrIQ4TwrHyRYUwWnl3En6ZciWbDYlrfwB7NlO4M5oGw6Ky+txjJ68PyGI7mgTrtOEwTKlo0CUsoqnZyBAq+BdHTe++eGfpU8qqeC+kX7QwjuvfQe25MtMc2+IP6mY6ROVYCE9koICCQPVaoywdB04t89/1O/w1cDnyilFU='
 };
 
 const client = new line.messagingApi.MessagingApiClient({
@@ -23,23 +22,16 @@ app.post('/webhook', express.json(), async (req, res) => {
     if (event.type !== 'message') continue;
     if (event.message.type !== 'text') continue;
 
-  await client.replyMessage({
-  replyToken: event.replyToken,
-  messages: [
-    {
-      type: 'text',
-      text: '你好，我是機器人 🤖'
-    }
-  ]
-});
+    await client.replyMessage({
+      replyToken: event.replyToken,
+      messages: [
+        {
+          type: 'text',
+          text: '你好，我是機器人 🤖'
+        }
+      ]
+    });
+  }
 
-  res.sendStatus(200);
-});
-
-app.get('/', (req, res) => {
-  res.send('Bot is running');
-});
-
-app.listen(process.env.PORT || 3000, () => {
-  console.log('機器人啟動');
+  res.sendStatus(200); // ✅ 放在外面
 });
