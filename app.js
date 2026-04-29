@@ -4,7 +4,7 @@ const line = require('@line/bot-sdk');
 const app = express();
 
 const config = {
-  channelAccessToken: '1GMvONrIQ4TwrHyRYUwWnl3En6ZciWbDYlrfwB7NlO4M5oGw6Ky+txjJ68PyGI7mgTrtOEwTKlo0CUsoqnZyBAq+BdHTe++eGfpU8qqeC+kX7QwjuvfQe25MtMc2+IP6mY6ROVYCE9koICCQPVaoywdB04t89/1O/w1cDnyilFU='
+  channelAccessToken: '1GMvONrIQ4TwrHyRYUwWnl3En6ZciWbDYlrfwB7NlO4M5oGw6Ky+txjJ68PyGI7mgTrtOEwTKlo0CUsoqnZyBA q+BdHTe++eGfpU8qqeC+kX7QwjuvfQe25MtMc2+IP6mY6ROVYCE9koICCQPVaoywdB04t89/1O/w1cDnyilFU='
 };
 
 const client = new line.messagingApi.MessagingApiClient({
@@ -36,12 +36,10 @@ app.post('/webhook', express.json(), async (req, res) => {
   res.sendStatus(200);
 });
 
-// ✅ 少這段會直接壞掉
 app.get('/', (req, res) => {
   res.send('Bot is running');
 });
 
-// ✅ 沒這個根本不會啟動
 app.listen(process.env.PORT || 3000, () => {
   console.log('機器人啟動');
 });
