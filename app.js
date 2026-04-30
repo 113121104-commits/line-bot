@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
-const { messagingApi } = require('@line/bot-sdk');
+const line = require('@line/bot-sdk');
 
 const ai = require('./services/ai');
 const weather = require('./services/weather');
@@ -9,14 +9,24 @@ const time = require('./services/time');
 
 const app = express();
 
-const client = new messagingApi.MessagingApiClient({
+/* 🔥 ① 放這裡（LINE config） */
+const config = {
+  channelAccessToken: process.env.LINE_TOKEN,
+  channelSecret: process.env.LINE_SECRET
+};
+
+/* 🔥 ② Client（新版） */
+const client = new line.messagingApi.MessagingApiClient({
   channelAccessToken: process.env.LINE_TOKEN
 });
 
-app.post('/webhook', express.json(), async (req, res) => {
+/* 🔥 ③ webhook（這裡最重要） */
+app.post('/webhook', line.middleware(config), async (req, res) => {
+
   const events = req.body.events || [];
 
   await Promise.all(events.map(async (event) => {
+
     if (event.type !== 'message') return;
     if (event.message.type !== 'text') return;
 
@@ -37,6 +47,10 @@ app.post('/webhook', express.json(), async (req, res) => {
       reply = await ai.askAI(question);
     }
 
+    else if (msg.includes('你好')) {
+      reply = '你好 👋 我是LINE機器人';
+    }
+
     else {
       reply = `我不懂：${msg}`;
     }
@@ -45,15 +59,18 @@ app.post('/webhook', express.json(), async (req, res) => {
       replyToken: event.replyToken,
       messages: [{ type: 'text', text: reply }]
     });
+
   }));
 
   res.sendStatus(200);
 });
 
+/* 測試頁 */
 app.get('/', (req, res) => {
   res.send('Bot running 🚀');
 });
 
+/* 啟動 */
 app.listen(process.env.PORT || 3000, () => {
   console.log('Bot started 🚀');
 });
