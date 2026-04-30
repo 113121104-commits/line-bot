@@ -52,7 +52,7 @@ app.post('/webhook', line.middleware(config), async (req, res) => {
     }
 
     else {
-      reply = `我不懂：${msg}`;
+      reply = `講人話：${msg}`;
     }
 
     await client.replyMessage({
